@@ -1,6 +1,10 @@
 package login.emplyeService;
 
+import login.Aiservice.AIservice;
+import login.dto.EmpDto;
+import login.entity.DepartmentEntity;
 import login.entity.EmployeeEntity;
+import login.repository.DepartmentRespository;
 import login.repository.EmployeRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,28 +16,35 @@ import java.util.List;
 @Service
 public class EmployeServiceImple implements EmployeService{
 
+    private final AIservice aIservice;
     private  final EmployeRepository empRepo;
+  private final DepartmentRespository departmentRespository;
 
-    public EmployeServiceImple(EmployeRepository empRepo){
+    public EmployeServiceImple(AIservice aIservice, EmployeRepository empRepo, DepartmentRespository departmentRespository){
+        this.aIservice = aIservice;
         this.empRepo=empRepo;
+        this.departmentRespository = departmentRespository;
+
     }
 
 
 
+  
+ 
     @Override
-    public EmployeeEntity save(EmployeeEntity employeeEntity) {
+    public EmployeeEntity save(EmpDto empDto) {
 
-      return  empRepo.save(employeeEntity);
-//       EmployeeEntity emp = new EmployeeEntity();
-//       emp.setEmpName(empName);
-//       emp.setEmpMailid(empMailId);
-//       emp.setRole(role);
-//       emp.setDepartment(department);
-//
-//        return  empRepo.save(emp);
+        EmployeeEntity emp = new EmployeeEntity();
+        emp.setEmpName(empDto.getEmpName());
+        emp.setEmpMailid(empDto.getEmpMailid());
+        emp.setRole(empDto.getRole());
 
+        DepartmentEntity dept = departmentRespository.findById(empDto.getDepartmentId())
+                        .orElseThrow(()->new RuntimeException("department is not found"));
 
 
+        emp.setDepartment(dept);
+                return empRepo.save(emp);
     }
 
     @Override
@@ -47,29 +58,57 @@ public class EmployeServiceImple implements EmployeService{
     }
 
     @Override
+    public String askempploye(String question) {
+        List<EmployeeEntity> employee = empRepo.findAll();
+
+        StringBuilder box = new StringBuilder();
+
+        //convert java object - > normal text  why noraml text becoz ai read only text
+        for (EmployeeEntity emp : employee) {
+            box.append("name: ").append(emp.getEmpName())
+                    .append(", mail: ").append(emp.getEmpMailid())
+                    .append(", role:").append(emp.getRole())
+                    .append(", department: ").append(emp.getDepartment().getDepname())
+                    .append("\n");
+        }
+        String prompt = "Ask any question in employe data\n"
+                + box + "\nquestion" + question;
+        return aIservice.AiService(prompt);
+
+    }
+
+    @Override
     public EmployeeEntity findById(Long empid) {
         
         return empRepo.findByEmpid(empid);
     }
 
     @Override
-    public String updateEmp(long empid, EmployeeEntity employeeEntity) {
-
-
+    public EmployeeEntity updateEmp(long empid, EmpDto empDto) {
         EmployeeEntity emp = empRepo.findByEmpid(empid);
-if(emp==null){
-    return "emp is not in db";
-}
+        if(emp==null){
+            throw  new RuntimeException("Emp is not in DB");
+            
+        }
+        
 
-        emp.setEmpName(employeeEntity.getEmpName());
-        emp.setEmpMailid(employeeEntity.getEmpMailid());
-        emp.setDepartment(employeeEntity.getDepartment());
-        emp.setRole(employeeEntity.getRole());
+        emp.setEmpName(empDto.getEmpName());
+        emp.setEmpMailid(empDto.getEmpMailid());
+        emp.setRole(empDto.getRole());
 
-         empRepo.save(emp);
+        //here we joins
+        DepartmentEntity dept = departmentRespository.findById(empDto.getDepartmentId())
+                .orElseThrow(()->new RuntimeException("department is not found"));
 
-         return "Update success";
+
+        emp.setDepartment(dept);
+        return empRepo.save(emp);
+
+
+
     }
+
+
 
     @Override
     public String deleteEmp(Long empid) {
@@ -95,4 +134,9 @@ if(emp==null){
     public Page<EmployeeEntity> searchEmployeeName(String empName, Pageable pageable) {
         return empRepo.findByEmpNameContaining(empName,pageable);
     }
+
+
+
+
+
 }

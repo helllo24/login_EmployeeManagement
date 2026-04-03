@@ -1,6 +1,7 @@
 package login.controller;
 
 
+import login.dto.EmpDto;
 import login.emplyeService.EmployeService;
 import login.entity.EmployeeEntity;
 import org.springframework.data.domain.Page;
@@ -25,9 +26,9 @@ public class EmpController {
     }
 
     @PostMapping("/saveEmp")
-    public ResponseEntity<HttpStatus> save(@RequestBody EmployeeEntity employeeEntity) {
+    public ResponseEntity<HttpStatus> save(@RequestBody EmpDto empDto) {
 
-        EmployeeEntity save = employeService.save(employeeEntity);
+        EmployeeEntity save = employeService.save(empDto);
        return ResponseEntity.ok(HttpStatus.CREATED);
 
     }
@@ -50,10 +51,10 @@ public class EmpController {
     }
 
  @PutMapping("/update/{empid}")
-    public String updateEmp(@PathVariable long empid,
-                            @RequestBody EmployeeEntity employeeEntity){
+    public EmployeeEntity updateEmp(@PathVariable long empid,
+                            @RequestBody EmpDto empDto ){
 
-        return employeService.updateEmp(empid,employeeEntity);
+        return employeService.updateEmp(empid,empDto);
 
     }
     @DeleteMapping("/del_emp/{empid}")
@@ -72,5 +73,13 @@ return employeService.deleteEmp(empid);
                                              Pageable pageable){
 
         return employeService.searchEmployeeName(empName,pageable);
+    }
+
+    @PostMapping("/askai")
+    public String askAi(@RequestBody String question){
+
+        return employeService.askempploye(question);
+
+
     }
 }

@@ -13,11 +13,13 @@ public class LoginEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String username;
     @Column(nullable = false)
     private String password;
 
+
+    @Column(unique = true)
 
     private String mail;
     private  String roles;

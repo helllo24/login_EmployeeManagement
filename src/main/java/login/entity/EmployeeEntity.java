@@ -24,8 +24,13 @@ public class EmployeeEntity {
     @Column(unique = true)
     private String empMailid;
 
-    private String department;
+
     private String role;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private DepartmentEntity department;
+
 
 
 
