@@ -10,12 +10,15 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EmployeRepository  extends JpaRepository<EmployeeEntity,Long> {
 
-    EmployeeEntity findByEmpName(String empName);
+
+     EmployeeEntity findByEmpName(String empName);
 
     EmployeeEntity findByEmpid(Long empid);
+
 
 
     Page<EmployeeEntity> findByEmpNameContaining(String empName, Pageable pageable);
 
 
+    EmployeeEntity findByEmpNameIgnoreCase(String name);
 }
