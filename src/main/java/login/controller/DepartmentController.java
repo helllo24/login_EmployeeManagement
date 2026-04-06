@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 
 @RequestMapping("/depart")
+@CrossOrigin(origins = "*")
 public class DepartmentController {
 
     private final DepartmentService departmentService;
