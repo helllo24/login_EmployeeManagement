@@ -44,6 +44,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        // 1. ALLOW ALL OPTIONS REQUESTS (CORS Pre-flight)
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
+
+        // 2. SKIP FILTERING FOR PUBLIC AUTH PATHS
+        if (request.getServletPath().contains("/auth")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         if (request.getHeader("Authorization") == null) {
             filterChain.doFilter(request, response);
