@@ -79,7 +79,9 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable());
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        // To this (forces CORS to happen before JWT):
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
         return http.build();
     }
 
