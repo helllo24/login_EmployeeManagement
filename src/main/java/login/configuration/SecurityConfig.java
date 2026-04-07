@@ -45,7 +45,8 @@ public class SecurityConfig {
 
         org.springframework.web.cors.CorsConfiguration config = new org.springframework.web.cors.CorsConfiguration();
 
-        config.setAllowedOrigins(java.util.List.of("*"));
+        config.setAllowedOrigins(java.util.List.of("http://localhost:5500",
+                "https://login-employee-management-frontend-nine.vercel.app"));
 
         config.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTION"));
         config.setAllowedHeaders(java.util.List.of("*"));
