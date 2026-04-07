@@ -18,7 +18,7 @@ public class Mailservice {
 
 
         SimpleMailMessage msg = new SimpleMailMessage();
-
+        msg.setFrom("hellojohn4129@gmail.com");
 
         msg.setTo(mail);
 
@@ -42,7 +42,7 @@ public class Mailservice {
 
         SimpleMailMessage msg = new SimpleMailMessage();
 
-
+        msg.setFrom("hellojohn4129@gmail.com");
         msg.setTo(mail);
 
         msg.setSubject("Your Retoken is ");
