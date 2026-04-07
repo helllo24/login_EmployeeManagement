@@ -81,12 +81,15 @@ public class LoginServiceImpl implements  LoginService {
             }
         }
         try{
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            loginDto.getUsername(),
-                            loginDto.getPassword()
-                    )
-            );
+            if(!passwordEncoder.matches(loginDto.getPassword(),user.getPassword())){
+                throw  new RuntimeException("Password is incorrect");
+            }
+//            authenticationManager.authenticate(
+//                    new UsernamePasswordAuthenticationToken(
+//                            loginDto.getUsername(),
+//                            loginDto.getPassword()
+//                    )
+          //  );
             resetattempts(user);
             //return the token ... it menas inside the try we do auth and if success generate token and return it..
 //            return jwtUtils.generateToken(
