@@ -49,11 +49,18 @@ public class AuthContoller {
     @PostMapping("/login")
     public ResponseEntity<Responce<String>> login(@RequestBody LoginDto loginDto){
 
-        String login = ser.login(loginDto);
         Responce<String> responce = new Responce<>();
-        responce.setSuccess(true);
-        responce.setMessage("User Login  Successfully");
-        responce.setData(login);
+        try {
+            String login = ser.login(loginDto);
+
+            responce.setSuccess(true);
+            responce.setMessage("User Login  Successfully");
+            responce.setData(login);
+        }catch (Exception e){
+
+            responce.setSuccess(false);
+            responce.setMessage(e.getMessage());
+        }
 
         return ResponseEntity.ok(responce);
 

@@ -119,7 +119,7 @@ public class LoginServiceImpl implements  LoginService {
         }catch(Exception e){
 
             increaseFailattempts(user);
-            return "Invalid Username & password";
+           throw  new RuntimeException("Invalid Username & password");
         }
 
     }
@@ -132,15 +132,15 @@ public class LoginServiceImpl implements  LoginService {
                 .orElseThrow(() -> new UsernotFoundException("User not found"));
 
         if (user.getOtp()==null){
-            return "otp is not generated";
+            throw  new RuntimeException("otp is not generated");
         }
 
         if(user.getOtpExpiry().isBefore(LocalDateTime.now())){
-            return "otp is expired";
+            throw  new RuntimeException( "otp is expired");
         }
 
         if(!user.getOtp().equals(otp)){
-            return "otp is not matched";
+            throw  new RuntimeException( "otp is not matched");
         }
 
         user.setOtpExpiry(null);
