@@ -18,7 +18,7 @@ public class Mailservice {
 
     @Value("=${RESEND_API_KEY}")
     private String apikey;
-    @Autowired
+  
 //    private JavaMailSender mailSender;
 
     public void mailsend(String mail, String otp) {
