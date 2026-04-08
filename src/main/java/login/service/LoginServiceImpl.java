@@ -175,7 +175,7 @@ public class LoginServiceImpl implements  LoginService {
 
         repo.save(user);
 
-        mailservice.reTokenSend(user.getMail(),reToken);
+        mailservice.retokensend(user.getMail(),reToken);
 
         System.out.println(reToken);
 
