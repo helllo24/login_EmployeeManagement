@@ -120,9 +120,9 @@ public class LoginServiceImpl implements  LoginService {
 
 
         }catch(Exception e){
-
+            e.printStackTrace();
             increaseFailattempts(user);
-           throw  new RuntimeException("Invalid Username & password");
+           throw  new RuntimeException("login failed" + e.getMessage());
         }
 
     }
