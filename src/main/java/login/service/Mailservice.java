@@ -16,9 +16,9 @@ import java.util.Date;
 @Service
 public class Mailservice {
 
-    @Value("=${RESEND_API_KEY}")
+    @Value("${RESEND_API_KEY}")
     private String apikey;
-  
+
 //    private JavaMailSender mailSender;
 
     public void mailsend(String mail, String otp) {
@@ -27,7 +27,7 @@ sendmailviaOtp(mail,  "Your login otp is :" , otp );
     }
 
     public void retokensend(String mail, String retoken) {
-        sendmailviaOtp(mail, "Your Reset Token", "Your Reset Token is: " + retoken);
+        sendmailviaOtp(mail, "Your Reset Token" ,retoken);
 
     }
 
