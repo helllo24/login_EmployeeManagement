@@ -33,6 +33,7 @@ sendmailviaOtp(mail,  "Your login otp is :" , otp );
 
     private  void sendmailviaOtp(String to, String subject, String content) {
 
+        System.out.println("DEBUG: Using API Key starting with: " + (apikey != null ? apikey.substring(0, 5) : "NULL"));
         String json = "{"
                 + "\"from\": \"onboarding@resend.dev\","
                 + "\"to\": [\"" + to + "\"],"
