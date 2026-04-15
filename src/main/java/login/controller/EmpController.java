@@ -75,6 +75,10 @@ return employeService.deleteEmp(empid);
 
         return employeService.searchEmployeeName(empName,pageable);
     }
+    @GetMapping("/mail")
+    public Page<EmployeeEntity> searchByMailid(@RequestParam String empMailid, Pageable pageable){
+        return employeService.searchEmpmailid(empMailid,pageable);
+    }
 
     @PostMapping("/askai")
     public String askAi(@RequestBody String question){

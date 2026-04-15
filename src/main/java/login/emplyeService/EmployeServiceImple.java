@@ -226,8 +226,10 @@ return aIservice.AiService(box +  "\n" + question);
         return empRepo.findByEmpNameContaining(empName,pageable);
     }
 
-
-
+    @Override
+    public Page<EmployeeEntity> searchEmpmailid(String empMailid, Pageable pageable) {
+        return empRepo.findByEmpMailidContaining(empMailid,pageable);
+    }
 
 
 }

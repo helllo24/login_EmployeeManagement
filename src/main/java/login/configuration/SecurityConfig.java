@@ -48,7 +48,7 @@ public class SecurityConfig {
         config.setAllowedOrigins(java.util.List.of("http://localhost:5500",
                 "https://login-frontend-project.vercel.app"));
 
-        config.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTION"));
+        config.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(java.util.List.of("*"));
         config.setAllowCredentials(true);
 

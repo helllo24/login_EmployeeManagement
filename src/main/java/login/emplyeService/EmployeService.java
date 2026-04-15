@@ -32,7 +32,7 @@ Page<EmployeeEntity> getAllemploye(Pageable pageable);
 
 Page<EmployeeEntity>searchEmployeeName(String empName,Pageable pageable);
 
-
+Page<EmployeeEntity>searchEmpmailid(String empMailid,Pageable pageable);
 
 }
 

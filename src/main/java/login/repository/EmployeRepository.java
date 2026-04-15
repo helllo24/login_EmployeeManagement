@@ -18,7 +18,7 @@ public interface EmployeRepository  extends JpaRepository<EmployeeEntity,Long> {
 
 
     Page<EmployeeEntity> findByEmpNameContaining(String empName, Pageable pageable);
-
+    Page<EmployeeEntity> findByEmpMailidContaining(String empMailid,Pageable pageable);
 
     EmployeeEntity findByEmpNameIgnoreCase(String name);
 }
