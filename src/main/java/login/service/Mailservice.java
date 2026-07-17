@@ -7,115 +7,65 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+
 import java.util.Date;
 
 @Service
 public class Mailservice {
 
-    @Value("${RESEND_API_KEY}")
-    private String apikey;
 
-//    private JavaMailSender mailSender;
+    @Autowired
+    private JavaMailSender mailSender;
 
+    // Send OTP Mail
     public void mailsend(String mail, String otp) {
-sendmailviaOtp(mail,  "Your login otp is :" , otp );
 
+        SimpleMailMessage msg = new SimpleMailMessage();
+
+        msg.setFrom("hellojohn4129@gmail.com");   // Verified sender in Brevo
+        msg.setTo(mail);
+        msg.setSubject("OTP Verification");
+        msg.setSentDate(new Date());
+
+        msg.setText(
+                "Hello,\n\n" +
+                        "Your OTP is: " + otp +
+                        "\n\nThis OTP is valid for 5 minutes." +
+                        "\nPlease do not share this OTP with anyone." +
+                        "\n\nRegards," +
+                        "\nLogin System"
+        );
+
+        mailSender.send(msg);
+
+        System.out.println("OTP Email Sent Successfully");
     }
 
-    public void retokensend(String mail, String retoken) {
-        sendmailviaOtp(mail, "Your Reset Token" ,retoken);
+    // Send Reset Token Mail
+    public void retokensend(String mail, String token) {
 
+        SimpleMailMessage msg = new SimpleMailMessage();
+
+        msg.setFrom("hellojohn4129@gmail.com");   // Verified sender in Brevo
+        msg.setTo(mail);
+        msg.setSubject("Password Reset");
+        msg.setSentDate(new Date());
+
+        msg.setText(
+                "Hello,\n\n" +
+                        "Your Password Reset Token is:\n\n" +
+                        token +
+                        "\n\nIf you did not request this, please ignore this email." +
+                        "\n\nRegards," +
+                        "\nLogin System"
+        );
+
+        mailSender.send(msg);
+
+        System.out.println("Reset Email Sent Successfully");
     }
-
-    private  void sendmailviaOtp(String to, String subject, String content) {
-
-        System.out.println("DEBUG: Using API Key starting with: " + (apikey != null ? apikey.substring(0, 5) : "NULL"));
-        String json = "{"
-                + "\"from\": \"noreply@dalphu.com\","
-                + "\"to\": [\"" + to + "\"],"
-                + "\"subject\": \"" + subject + "\","
-                + "\"html\": \"<strong>" + content + "</strong>\""
-                + "}";
-
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://api.resend.com/emails"))
-                .header("Authorization", "Bearer " + apikey)
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(json))
-                .build();
-
-        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                .thenAccept(response -> {
-                    System.out.println("Resend Status: " + response.statusCode());
-                    System.out.println("Resend Body: " + response.body());
-                })
-                .exceptionally(e -> {
-                    e.printStackTrace();
-                    return null;
-                });
-
-
-
-
-    }
-
 
 }
-
-
-//    public void mailsend(String mail,String otp){
-//
-//
-//        SimpleMailMessage msg = new SimpleMailMessage();
-//        msg.setFrom("hellojohn4129@gmail.com");
-//
-//        msg.setTo(mail);
-//
-//        msg.setSubject("Hi this :  Your otp is  Do not share eeeeeeee ");
-//        msg.setSentDate(new Date());
-//
-//        msg.setText("Otp is " + otp);
-//
-//
-//        mailSender.send(msg);
-//
-//        System.out.println("Email sent successfully");
-//
-//
-//
-//
-//
-//    }
-//    public void reTokenSend(String mail,String retoken){
-//
-//
-//        SimpleMailMessage msg = new SimpleMailMessage();
-//
-//        msg.setFrom("hellojohn4129@gmail.com");
-//        msg.setTo(mail);
-//
-//        msg.setSubject("Your Retoken is ");
-//        msg.setSentDate(new Date());
-//
-//
-//        msg.setText("Retoken is " + retoken);
-//
-//        mailSender.send(msg);
-//
-//        System.out.println("Email sent successfully");
-//
-//
-//
-//
-//
-//    }
-
-
 
 
 
