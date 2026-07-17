@@ -6,63 +6,94 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-
-
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import java.util.*;
 import java.util.Date;
 
 @Service
 public class Mailservice {
 
 
-    @Autowired
-    private JavaMailSender mailSender;
+    @Value("${BREVO_API_KEY}")
+    private String apiKey;
 
-    // Send OTP Mail
+    private final String API_URL = "https://api.brevo.com/v3/smtp/email";
+
     public void mailsend(String mail, String otp) {
 
-        SimpleMailMessage msg = new SimpleMailMessage();
-
-        msg.setFrom("hellojohn4129@gmail.com");   // Verified sender in Brevo
-        msg.setTo(mail);
-        msg.setSubject("OTP Verification");
-        msg.setSentDate(new Date());
-
-        msg.setText(
-                "Hello,\n\n" +
-                        "Your OTP is: " + otp +
-                        "\n\nThis OTP is valid for 5 minutes." +
-                        "\nPlease do not share this OTP with anyone." +
-                        "\n\nRegards," +
-                        "\nLogin System"
+        sendMail(
+                mail,
+                "OTP Verification",
+                "<h2>Your OTP is: " + otp + "</h2>"
+                        + "<p>This OTP is valid for 5 minutes.</p>"
+                        + "<p>Please do not share it with anyone.</p>"
         );
-
-        mailSender.send(msg);
-
-        System.out.println("OTP Email Sent Successfully");
     }
 
-    // Send Reset Token Mail
     public void retokensend(String mail, String token) {
 
-        SimpleMailMessage msg = new SimpleMailMessage();
-
-        msg.setFrom("hellojohn4129@gmail.com");   // Verified sender in Brevo
-        msg.setTo(mail);
-        msg.setSubject("Password Reset");
-        msg.setSentDate(new Date());
-
-        msg.setText(
-                "Hello,\n\n" +
-                        "Your Password Reset Token is:\n\n" +
-                        token +
-                        "\n\nIf you did not request this, please ignore this email." +
-                        "\n\nRegards," +
-                        "\nLogin System"
+        sendMail(
+                mail,
+                "Password Reset",
+                "<h2>Password Reset Token</h2>"
+                        + "<p>" + token + "</p>"
         );
+    }
 
-        mailSender.send(msg);
+    private void sendMail(String to, String subject, String html) {
 
-        System.out.println("Reset Email Sent Successfully");
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("api-key", apiKey);
+
+        Map<String, Object> body = new HashMap<>();
+
+        Map<String, String> sender = new HashMap<>();
+        sender.put("name", "Login System");
+        sender.put("email", "hellojohn4129@gmail.com");
+
+        body.put("sender", sender);
+
+        List<Map<String, String>> receivers = new ArrayList<>();
+
+        Map<String, String> receiver = new HashMap<>();
+        receiver.put("email", to);
+
+        receivers.add(receiver);
+
+        body.put("to", receivers);
+        body.put("subject", subject);
+        body.put("htmlContent", html);
+
+        HttpEntity<Map<String, Object>> request =
+                new HttpEntity<>(body, headers);
+
+        try {
+
+            ResponseEntity<String> response =
+                    restTemplate.exchange(
+                            API_URL,
+                            HttpMethod.POST,
+                            request,
+                            String.class
+                    );
+
+            System.out.println("Status : " + response.getStatusCode());
+            System.out.println(response.getBody());
+
+        } catch (Exception e) {
+
+            System.out.println("EMAIL FAILED");
+            e.printStackTrace();
+
+        }
+
     }
 
 }
