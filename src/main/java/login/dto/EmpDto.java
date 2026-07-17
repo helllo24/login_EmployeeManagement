@@ -6,7 +6,7 @@ import lombok.Data;
 public class EmpDto {
 
     private String empName;
-    private String empMailid;
+                    private String empMailid;
     private String role;
 
 
